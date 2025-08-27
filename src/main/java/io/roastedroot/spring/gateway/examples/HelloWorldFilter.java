@@ -8,35 +8,34 @@ import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
 @Component
-public class SumFilter extends AbstractGatewayFilterFactory<Object> {
+public class HelloWorldFilter extends AbstractGatewayFilterFactory<Object> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SumFilter.class);
+    private static final Logger LOG = LoggerFactory.getLogger(HelloWorldFilter.class);
 
-    private final SumService sumService;
+    private final HelloWorldService helloWorldService;
 
-    public SumFilter(SumService sumService) {
-        this.sumService = sumService;
+    public HelloWorldFilter(HelloWorldService helloWorldService) {
+        this.helloWorldService = helloWorldService;
     }
 
     @Override
     public GatewayFilter apply(Object config) {
         return (exchange, chain) -> {
-            String x = exchange.getRequest().getHeaders().get("X-Sum-x").get(0);
-            String y = exchange.getRequest().getHeaders().get("X-Sum-y").get(0);
-            LOG.info("Summing: {} + {}", x, y);
-            int result = sum(Integer.parseInt(x), Integer.parseInt(y));
+            String name = exchange.getRequest().getHeaders().get("X-HelloWorld-name").get(0);
+            LOG.info("Hello World: {}", name);
+            String result = hello(name);
             return chain.filter(exchange)
                     .then(
                             Mono.fromRunnable(
                                     () -> {
                                         exchange.getResponse()
                                                 .getHeaders()
-                                                .add("X-Sum", String.valueOf(result));
+                                                .add("X-HelloWorld", result);
                                     }));
         };
     }
 
-    private int sum(int x, int y) {
-        return sumService.sum(x, y);
+    private String hello(String name) {
+        return helloWorldService.customHelloWorld(name);
     }
 }

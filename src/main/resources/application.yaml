@@ -8,5 +8,11 @@ spring:
           filters:
             - StripPrefix=1
             - SumFilter
+        - uri: https://chicory.dev
+          predicates:
+            - Path=/hello
+          filters:
+            - StripPrefix=1
+            - HelloWorldFilter
 server:
   port: 8081

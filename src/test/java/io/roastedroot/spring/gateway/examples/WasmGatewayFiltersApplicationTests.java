@@ -3,6 +3,7 @@ package io.roastedroot.spring.gateway.examples;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,14 +20,14 @@ class WasmGatewayFiltersApplicationTests {
     @LocalServerPort private int port;
 
     @Test
-    void wasmFilterResponds() {
+    void sum() {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.putAll(
                 Map.of(
-                        "X-CustomSum-x",
+                        "X-Sum-x",
                         Collections.singletonList("10"),
-                        "X-CustomSum-y",
+                        "X-Sum-y",
                         Collections.singletonList("16")));
         ResponseEntity<String> responseEntity =
                 restTemplate.exchange(
@@ -35,6 +36,21 @@ class WasmGatewayFiltersApplicationTests {
                         new HttpEntity<>("", headers),
                         String.class);
 
-        assertEquals(responseEntity.getHeaders().get("X-CustomSum").get(0), "26");
+        assertEquals(responseEntity.getHeaders().get("X-Sum").get(0), "26");
+    }
+
+    @Test
+    void helloWorld() {
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.putAll(Map.of("X-HelloWorld-name", List.of("foobar")));
+        ResponseEntity<String> responseEntity =
+                restTemplate.exchange(
+                        "http://localhost:" + port + "/hello",
+                        HttpMethod.GET,
+                        new HttpEntity<>("", headers),
+                        String.class);
+
+        assertEquals(responseEntity.getHeaders().get("X-HelloWorld").get(0), "Hello foobar\n");
     }
 }

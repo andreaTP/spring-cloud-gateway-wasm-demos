@@ -26,7 +26,7 @@ class SumService {
         sumFn = instance.exports().function("sum");
     }
 
-    public Integer customSum(Integer x, Integer y) {
+    public Integer sum(Integer x, Integer y) {
         return (int) sumFn.apply(x, y)[0];
     }
 }
