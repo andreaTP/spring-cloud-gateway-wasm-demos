@@ -54,18 +54,26 @@ class WasmGatewayFiltersApplicationTests {
         assertEquals("Hello foobar", responseEntity.getHeaders().get("X-HelloWorld").get(0));
     }
 
-//    @Test
-//    void jq() {
-//        RestTemplate restTemplate = new RestTemplate();
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.putAll(Map.of("X-Jq-query", List.of("foobar")));
-//        ResponseEntity<String> responseEntity =
-//                restTemplate.exchange(
-//                        "http://localhost:" + port + "/jq",
-//                        HttpMethod.PUT,
-//                        new HttpEntity<>("{ }", headers),
-//                        String.class);
-//
-//        assertEquals("Hello foobar", responseEntity.getHeaders().get("X-HelloWorld").get(0));
-//    }
+    @Test
+    void jq() {
+        String body =
+                "{\n"
+                        + "  \"name\": \"Alice\",\n"
+                        + "  \"age\": 30,\n"
+                        + "  \"skills\": [\"Java\", \"Go\", \"Wasm\"]\n"
+                        + "}";
+        String query = "{ user: .name, firstSkill: .skills[0] }";
+
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.putAll(Map.of("X-Jq-query", List.of(query)));
+        ResponseEntity<String> responseEntity =
+                restTemplate.exchange(
+                        "http://localhost:" + port + "/jq",
+                        HttpMethod.PUT,
+                        new HttpEntity<>(body, headers),
+                        String.class);
+
+        assertEquals("{\"user\":\"Alice\",\"firstSkill\":\"Java\"}\n", responseEntity.getBody());
+    }
 }

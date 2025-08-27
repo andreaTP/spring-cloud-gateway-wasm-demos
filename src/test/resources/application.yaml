@@ -14,3 +14,9 @@ spring:
           filters:
             - StripPrefix=1
             - HelloWorldFilter
+        - uri: https://chicory.dev
+          predicates:
+            - Path=/jq
+          filters:
+            - StripPrefix=1
+            - JqFilter
