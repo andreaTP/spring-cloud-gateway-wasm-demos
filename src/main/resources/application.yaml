@@ -2,7 +2,7 @@ spring:
   cloud:
     gateway:
       routes:
-        - uri: https://albertoimpl.com
+        - uri: https://chicory.dev
           predicates:
             - Path=/sum
           filters:
