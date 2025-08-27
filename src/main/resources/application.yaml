@@ -7,6 +7,6 @@ spring:
             - Path=/wasm
           filters:
             - StripPrefix=1
-            - CustomSumWASMFilter
+            - SumWASMFilter
 server:
   port: 8081

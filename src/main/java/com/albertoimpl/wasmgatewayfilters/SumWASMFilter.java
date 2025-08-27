@@ -8,14 +8,13 @@ import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
 @Component
-public class CustomSumWASMFilter extends AbstractGatewayFilterFactory<Object> {
+public class SumWASMFilter extends AbstractGatewayFilterFactory<Object> {
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(CustomSumWASMFilter.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SumWASMFilter.class);
 
     private final SumWASMService sumWASMService;
 
-    public CustomSumWASMFilter(SumWASMService sumWASMService) {
+    public SumWASMFilter(SumWASMService sumWASMService) {
         this.sumWASMService = sumWASMService;
     }
 
@@ -26,16 +25,18 @@ public class CustomSumWASMFilter extends AbstractGatewayFilterFactory<Object> {
             String y = exchange.getRequest().getHeaders().get("X-CustomSum-y").get(0);
             LOG.info("Summing: {} + {}", x, y);
             int result = sum(Integer.parseInt(x), Integer.parseInt(y));
-            return chain.filter(exchange).then(Mono.fromRunnable(() -> {
-                exchange.getResponse()
-                        .getHeaders()
-                        .add("X-CustomSum", String.valueOf(result));
-            }));
+            return chain.filter(exchange)
+                    .then(
+                            Mono.fromRunnable(
+                                    () -> {
+                                        exchange.getResponse()
+                                                .getHeaders()
+                                                .add("X-CustomSum", String.valueOf(result));
+                                    }));
         };
     }
 
     private int sum(int x, int y) {
         return sumWASMService.customSum(x, y);
     }
-
 }

@@ -9,5 +9,4 @@ public class WasmGatewayFiltersApplication {
     public static void main(String[] args) {
         SpringApplication.run(WasmGatewayFiltersApplication.class, args);
     }
-
 }
