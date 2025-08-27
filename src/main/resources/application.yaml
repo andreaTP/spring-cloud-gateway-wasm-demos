@@ -2,9 +2,9 @@ spring:
   cloud:
     gateway:
       routes:
-        - uri: https://roastedroot.io
+        - uri: https://albertoimpl.com
           predicates:
-            - Path=/sum
+            - Path=/wasm
           filters:
             - StripPrefix=1
             - CustomSumWASMFilter
