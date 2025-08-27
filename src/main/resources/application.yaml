@@ -1,0 +1,12 @@
+spring:
+  cloud:
+    gateway:
+      routes:
+        - uri: https://roastedroot.io
+          predicates:
+            - Path=/sum
+          filters:
+            - StripPrefix=1
+            - CustomSumWASMFilter
+server:
+  port: 8081
