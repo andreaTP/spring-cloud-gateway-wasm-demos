@@ -4,7 +4,7 @@ spring:
       routes:
         - uri: https://albertoimpl.com
           predicates:
-            - Path=/wasm
+            - Path=/sum
           filters:
             - StripPrefix=1
-            - SumWASMFilter
+            - SumFilter

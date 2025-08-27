@@ -11,7 +11,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
 @Service
-class SumWASMService {
+class SumService {
 
     @Value("classpath:sum.c.wasm")
     private Resource resourceFile;

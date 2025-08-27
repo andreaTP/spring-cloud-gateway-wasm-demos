@@ -30,7 +30,7 @@ class WasmGatewayFiltersApplicationTests {
                         Collections.singletonList("16")));
         ResponseEntity<String> responseEntity =
                 restTemplate.exchange(
-                        "http://localhost:" + port + "/wasm",
+                        "http://localhost:" + port + "/sum",
                         HttpMethod.GET,
                         new HttpEntity<>("", headers),
                         String.class);

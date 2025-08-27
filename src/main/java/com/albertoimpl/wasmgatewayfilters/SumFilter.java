@@ -8,14 +8,14 @@ import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
 @Component
-public class SumWASMFilter extends AbstractGatewayFilterFactory<Object> {
+public class SumFilter extends AbstractGatewayFilterFactory<Object> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SumWASMFilter.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SumFilter.class);
 
-    private final SumWASMService sumWASMService;
+    private final SumService sumService;
 
-    public SumWASMFilter(SumWASMService sumWASMService) {
-        this.sumWASMService = sumWASMService;
+    public SumFilter(SumService sumService) {
+        this.sumService = sumService;
     }
 
     @Override
@@ -37,6 +37,6 @@ public class SumWASMFilter extends AbstractGatewayFilterFactory<Object> {
     }
 
     private int sum(int x, int y) {
-        return sumWASMService.customSum(x, y);
+        return sumService.customSum(x, y);
     }
 }
