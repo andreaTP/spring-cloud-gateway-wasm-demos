@@ -24,6 +24,7 @@ public class HelloWorldFilter extends AbstractGatewayFilterFactory<Object> {
             String name = exchange.getRequest().getHeaders().get("X-HelloWorld-name").get(0);
             LOG.info("Hello World: {}", name);
             String result = hello(name);
+            LOG.info("Hello World result: {}", result);
             return chain.filter(exchange)
                     .then(
                             Mono.fromRunnable(
@@ -36,6 +37,6 @@ public class HelloWorldFilter extends AbstractGatewayFilterFactory<Object> {
     }
 
     private String hello(String name) {
-        return helloWorldService.customHelloWorld(name);
+        return helloWorldService.helloWorld(name);
     }
 }

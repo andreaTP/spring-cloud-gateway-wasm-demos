@@ -51,6 +51,21 @@ class WasmGatewayFiltersApplicationTests {
                         new HttpEntity<>("", headers),
                         String.class);
 
-        assertEquals(responseEntity.getHeaders().get("X-HelloWorld").get(0), "Hello foobar\n");
+        assertEquals("Hello foobar", responseEntity.getHeaders().get("X-HelloWorld").get(0));
     }
+
+//    @Test
+//    void jq() {
+//        RestTemplate restTemplate = new RestTemplate();
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.putAll(Map.of("X-Jq-query", List.of("foobar")));
+//        ResponseEntity<String> responseEntity =
+//                restTemplate.exchange(
+//                        "http://localhost:" + port + "/jq",
+//                        HttpMethod.PUT,
+//                        new HttpEntity<>("{ }", headers),
+//                        String.class);
+//
+//        assertEquals("Hello foobar", responseEntity.getHeaders().get("X-HelloWorld").get(0));
+//    }
 }

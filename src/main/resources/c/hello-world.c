@@ -6,9 +6,9 @@ int main() {
 
     if (fgets(input, sizeof(input), stdin) != NULL) {
         input[strcspn(input, "\n")] = 0;
-        printf("Hello %s\n", input);
+        printf("Hello %s", input);
     } else {
-        printf("Hello World!\n");
+        printf("Hello World");
     }
     
     return 0;
