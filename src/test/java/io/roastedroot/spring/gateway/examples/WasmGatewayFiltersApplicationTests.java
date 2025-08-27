@@ -2,12 +2,15 @@ package io.roastedroot.spring.gateway.examples;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -75,5 +78,46 @@ class WasmGatewayFiltersApplicationTests {
                         String.class);
 
         assertEquals("{\"user\":\"Alice\",\"firstSkill\":\"Java\"}\n", responseEntity.getBody());
+    }
+
+    @Value("classpath:validate.js")
+    private Resource validateJs;
+
+    @Test
+    void javascript() throws Exception {
+        String validBody =
+                "{\n"
+                        + "  \"name\": \"Alice\",\n"
+                        + "  \"age\": 30,\n"
+                        + "  \"skills\": [\"Java\", \"Go\", \"Wasm\"]\n"
+                        + "}";
+        String invalidBody =
+                "{\n"
+                        + "  \"name\": \"Alice\",\n"
+                        + "  \"age\": 17,\n"
+                        + "  \"skills\": [\"Java\", \"Go\", \"Wasm\"]\n"
+                        + "}";
+
+        String validateFn =
+                validateJs.getContentAsString(StandardCharsets.UTF_8).replaceAll("\\R", "");
+
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.putAll(Map.of("X-JavaScript-validate", List.of(validateFn)));
+        ResponseEntity<String> validResponseEntity =
+                restTemplate.exchange(
+                        "http://localhost:" + port + "/js",
+                        HttpMethod.PUT,
+                        new HttpEntity<>(validBody, headers),
+                        String.class);
+        assertEquals("Valid", validResponseEntity.getBody());
+
+        ResponseEntity<String> invalidResponseEntity =
+                restTemplate.exchange(
+                        "http://localhost:" + port + "/js",
+                        HttpMethod.PUT,
+                        new HttpEntity<>(invalidBody, headers),
+                        String.class);
+        assertEquals("User must be 18 or older.", invalidResponseEntity.getBody());
     }
 }

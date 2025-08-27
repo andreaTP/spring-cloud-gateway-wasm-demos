@@ -15,14 +15,14 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Component
-public class JqFilter extends AbstractGatewayFilterFactory<Object> {
+public class JavaScriptFilter extends AbstractGatewayFilterFactory<Object> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(JqFilter.class);
+    private static final Logger LOG = LoggerFactory.getLogger(JavaScriptFilter.class);
 
-    private final JqService jqService;
+    private final JavaScriptService jsService;
 
-    public JqFilter(JqService jqService) {
-        this.jqService = jqService;
+    public JavaScriptFilter(JavaScriptService jsService) {
+        this.jsService = jsService;
     }
 
     private Mono<String> extractBody(ServerWebExchange exchange) {
@@ -33,7 +33,7 @@ public class JqFilter extends AbstractGatewayFilterFactory<Object> {
                         dataBuffer -> {
                             byte[] bytes = new byte[dataBuffer.readableByteCount()];
                             dataBuffer.read(bytes);
-                            DataBufferUtils.release(dataBuffer);
+                            DataBufferUtils.release(dataBuffer); // important!
                             return new String(bytes, UTF_8);
                         });
     }
@@ -41,12 +41,13 @@ public class JqFilter extends AbstractGatewayFilterFactory<Object> {
     @Override
     public GatewayFilter apply(Object config) {
         return (exchange, chain) -> {
-            String query = exchange.getRequest().getHeaders().get("X-Jq-query").get(0);
+            String validateFn =
+                    exchange.getRequest().getHeaders().get("X-JavaScript-validate").get(0);
             return extractBody(exchange)
                     .flatMap(
                             body -> {
-                                LOG.info("Jq: {} + {}", query, body);
-                                String result = jq(query, body);
+                                LOG.info("JavaScript: {} + {}", validateFn, body);
+                                String result = validate(validateFn, body);
 
                                 exchange.getResponse()
                                         .getHeaders()
@@ -61,7 +62,7 @@ public class JqFilter extends AbstractGatewayFilterFactory<Object> {
         };
     }
 
-    private String jq(String query, String body) {
-        return jqService.run(query, body);
+    private String validate(String validate, String body) {
+        return jsService.run(validate, body);
     }
 }

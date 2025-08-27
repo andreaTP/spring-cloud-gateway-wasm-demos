@@ -20,5 +20,11 @@ spring:
           filters:
             - StripPrefix=1
             - JqFilter
+        - uri: https://chicory.dev
+          predicates:
+            - Path=/js
+          filters:
+            - StripPrefix=1
+            - JavaScriptFilter
 server:
   port: 8081
