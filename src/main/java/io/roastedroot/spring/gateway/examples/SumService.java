@@ -1,4 +1,4 @@
-package com.albertoimpl.wasmgatewayfilters;
+package io.roastedroot.spring.gateway.examples;
 
 import com.dylibso.chicory.runtime.ExportFunction;
 import com.dylibso.chicory.runtime.Instance;

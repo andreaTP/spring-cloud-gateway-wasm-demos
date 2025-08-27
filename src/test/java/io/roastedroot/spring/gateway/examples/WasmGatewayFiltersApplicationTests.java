@@ -1,4 +1,4 @@
-package com.albertoimpl.wasmgatewayfilters;
+package io.roastedroot.spring.gateway.examples;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
