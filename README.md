@@ -1,4 +1,4 @@
-# Spring Cloud Gateway and WebAssembly showcases
+# Spring Cloud Gateway and WebAssembly demos
 
 A collection of custom Spring Cloud Gateway filters that demonstrate various WebAssembly integration patterns using different runtime environments and languages.
 
