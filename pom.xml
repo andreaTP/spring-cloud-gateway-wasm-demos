@@ -55,6 +55,12 @@
     </dependency>
 
     <dependency>
+      <groupId>com.styra.opa</groupId>
+      <artifactId>opa-java-wasm</artifactId>
+      <version>1.0.2</version>
+    </dependency>
+
+    <dependency>
       <groupId>io.roastedroot</groupId>
       <artifactId>jq4j</artifactId>
       <version>0.0.1</version>
@@ -99,21 +105,21 @@
     </dependency>
   </dependencies>
   <build>
-
     <resources>
-      <resource>
-        <filtering>true</filtering>
-        <directory>src/main/resources</directory>
-        <excludes>
-          <exclude>**/*.wasm</exclude>
-        </excludes>
-      </resource>
+      <!-- TODO: this doesn't seems to work with policy.wasm -->
       <resource>
         <filtering>false</filtering>
         <directory>src/main/resources</directory>
         <includes>
           <include>**/*.wasm</include>
         </includes>
+      </resource>
+      <resource>
+        <filtering>true</filtering>
+        <directory>src/main/resources</directory>
+        <excludes>
+          <exclude>**/*.wasm</exclude>
+        </excludes>
       </resource>
     </resources>
     <plugins>

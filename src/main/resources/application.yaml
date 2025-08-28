@@ -26,5 +26,11 @@ spring:
           filters:
             - StripPrefix=1
             - JavaScriptFilter
+        - uri: https://chicory.dev
+          predicates:
+            - Path=/opa
+          filters:
+            - StripPrefix=1
+            - OPAFilter
 server:
   port: 8081

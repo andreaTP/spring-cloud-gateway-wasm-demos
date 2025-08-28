@@ -1,6 +1,8 @@
 package io.roastedroot.spring.gateway.examples;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
@@ -15,6 +17,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -119,5 +122,35 @@ class WasmGatewayFiltersApplicationTests {
                         new HttpEntity<>(invalidBody, headers),
                         String.class);
         assertEquals("User must be 18 or older.", invalidResponseEntity.getBody());
+    }
+
+    @Test
+    void opa() throws Exception {
+        String notAllowedUser = "Alice";
+        String allowedUser = "Bob";
+
+        RestTemplate restTemplate = new RestTemplate();
+
+        assertThrows(
+                HttpClientErrorException.Unauthorized.class,
+                () -> {
+                    HttpHeaders headers = new HttpHeaders();
+                    headers.putAll(Map.of("X-User", List.of(notAllowedUser)));
+                    restTemplate.exchange(
+                            "http://localhost:" + port + "/opa",
+                            HttpMethod.GET,
+                            new HttpEntity<>("", headers),
+                            String.class);
+                });
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.putAll(Map.of("X-User", List.of(allowedUser)));
+        ResponseEntity<String> allowedResponseEntity =
+                restTemplate.exchange(
+                        "http://localhost:" + port + "/opa",
+                        HttpMethod.GET,
+                        new HttpEntity<>("", headers),
+                        String.class);
+        assertTrue(allowedResponseEntity.getStatusCode().is2xxSuccessful());
     }
 }
