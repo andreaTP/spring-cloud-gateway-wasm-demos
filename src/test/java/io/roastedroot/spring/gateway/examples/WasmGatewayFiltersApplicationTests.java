@@ -125,6 +125,40 @@ class WasmGatewayFiltersApplicationTests {
     }
 
     @Test
+    void go() throws Exception {
+        String validBody =
+                "{\n"
+                        + "  \"name\": \"Alice\",\n"
+                        + "  \"age\": 30,\n"
+                        + "  \"skills\": [\"Java\", \"Go\", \"Wasm\"]\n"
+                        + "}";
+        String invalidBody =
+                "{\n"
+                        + "  \"name\": \"Alice\",\n"
+                        + "  \"age\": 17,\n"
+                        + "  \"skills\": [\"Java\", \"Go\", \"Wasm\"]\n"
+                        + "}";
+
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        ResponseEntity<String> validResponseEntity =
+                restTemplate.exchange(
+                        "http://localhost:" + port + "/go",
+                        HttpMethod.PUT,
+                        new HttpEntity<>(validBody, headers),
+                        String.class);
+        assertEquals("Valid", validResponseEntity.getBody());
+
+        ResponseEntity<String> invalidResponseEntity =
+                restTemplate.exchange(
+                        "http://localhost:" + port + "/go",
+                        HttpMethod.PUT,
+                        new HttpEntity<>(invalidBody, headers),
+                        String.class);
+        assertEquals("User must be 18 or older.", invalidResponseEntity.getBody());
+    }
+
+    @Test
     void opa() throws Exception {
         String notAllowedUser = "Alice";
         String allowedUser = "Bob";

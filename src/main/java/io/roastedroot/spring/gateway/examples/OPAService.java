@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 @Service
 class OPAService {
 
-    // TODO: FIXME is getting removed from target/classes
+    // TODO: FIXME is getting removed from target/classes when running from command line
     @Value("file:src/main/resources/policy.wasm")
     private Resource resourceFile;
 
