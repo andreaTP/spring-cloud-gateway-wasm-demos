@@ -80,8 +80,6 @@ curl -X PUT localhost:8081/jq \
 # Response: {"user":"Alice","firstSkill":"Java"}
 ```
 
-**Source Code**: `src/main/java/io/roastedroot/spring/gateway/examples/JqService.java`
-
 ### 4. JavaScript Filter
 
 Runtime JavaScript execution for dynamic request validation and processing based on [QuickJs](https://github.com/bellard/quickjs).
@@ -107,12 +105,11 @@ curl -X PUT localhost:8081/js \
 # Valid
 ```
 
-**Source Code**: `src/main/java/io/roastedroot/spring/gateway/examples/JavaScriptService.java`  
-**Default Validation Function**: `src/test/resources/validate.js`
+**Example Source Code**: `src/test/resources/validate.js`
 
 ### 5. Go Filter
 
-Runtime Go WebAssembly execution for request validation and processing.
+Runtime Go WebAssembly(compiled with [TinyGo](https://tinygo.org/)) execution for request validation and processing.
 
 **Route**: `/go`
 **Method**: PUT
